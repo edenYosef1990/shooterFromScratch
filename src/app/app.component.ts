@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { HelperClass } from './helperClass';
 
 interface Pole {
-  YAboveHorizon: number,
+  height: number,
   YBelowHorizon: number,
   x: number
 }
@@ -10,6 +10,7 @@ interface Pole {
 interface OriginalPole {
   floorLocationX: number,
   floorLocationY: number,
+  height: number
 }
 
 @Component({
@@ -44,7 +45,7 @@ export class AppComponent implements AfterViewInit {
     ctx?.clearRect(0,0,500,500);
     this.drawBackground();
     this.drawMiddle();
-    this.renderProjectedPolygon({floorLocationX: -80, floorLocationY: 100},{floorLocationX: 80, floorLocationY: 100});
+    this.renderProjectedPolygon({floorLocationX: -80, floorLocationY: 100, height: 100},{floorLocationX: 80, floorLocationY: 100, height: 100});
 
   }
 
@@ -54,11 +55,10 @@ export class AppComponent implements AfterViewInit {
       , OriginalPole.floorLocationY
       , this.playerPositionX
       , this.playerPositionY);
-      console.log(lengthFromPosition);
       return {
-        YAboveHorizon: 5000 / lengthFromPosition
+        height: OriginalPole.height * (200 / lengthFromPosition)
       , YBelowHorizon: 5000 / lengthFromPosition
-      , x: this.middleWidth - OriginalPole.floorLocationX * (100 / lengthFromPosition)};
+      , x: this.middleWidth - OriginalPole.floorLocationX * (200 / lengthFromPosition)};
   }
 
   drawMiddle(){
@@ -90,10 +90,10 @@ export class AppComponent implements AfterViewInit {
     ctx!.strokeStyle = 'black';
     ctx!.fillStyle = 'white';
     ctx!.beginPath();
-    ctx!.moveTo(leftPole.x, this.horizonHeight + leftPole.YAboveHorizon);
+    ctx!.moveTo(leftPole.x, this.horizonHeight - leftPole.YBelowHorizon + leftPole.height);
     ctx!.lineTo(leftPole.x, this.horizonHeight -leftPole.YBelowHorizon);
     ctx!.lineTo(rightPole.x, this.horizonHeight - rightPole.YBelowHorizon);
-    ctx!.lineTo(rightPole.x, this.horizonHeight + rightPole.YAboveHorizon);
+    ctx!.lineTo(rightPole.x, this.horizonHeight - rightPole.YBelowHorizon + rightPole.height);
     ctx!.closePath();
     ctx!.stroke();
     ctx!.fill();
@@ -105,10 +105,11 @@ export class AppComponent implements AfterViewInit {
   }
 
   lambdafoo = (ev: KeyboardEvent) => {
-    if(this.playerPositionY < 100)
-    this.playerPositionY += 1;
+    if(ev.key == 'w') this.playerPositionY += 1;
+    if(ev.key == 's') this.playerPositionY -= 1;
+    if(ev.key == 'a') this.playerPositionX += 1;
+    if(ev.key == 'd') this.playerPositionX -= 1;
     this.renderGame();
-    console.log(ev);
   }
 
   init() {
