@@ -24,12 +24,14 @@ export function getProjectionOnView(view: View , pole: Pole, screenLength: numbe
     let distance = HelperClass.Length(view.postion.x,view.postion.y,pole.x,pole.y);
     let projectionLimits = getLimitsOfView(distance,view.height,view.angleDeg);
     let distanceBottomViewToPlayer = projectionLimits.bottom;
+    let distanceRightViewToPlayer = pole.x - projectionLimits.bottom;
     let viewWholeDistance = projectionLimits.upper - projectionLimits.bottom;
 
     let projectedDistanceBottomViewToPlayer = distanceBottomViewToPlayer * (viewWholeDistance / screenLength);
+    let projectedDistanceRightViewToPlayer = distanceRightViewToPlayer * (viewWholeDistance / screenLength);
     let projectedHeight =  pole.height * (viewWholeDistance / screenLength);
 
-    return {x: 0 , y: projectedDistanceBottomViewToPlayer , height: projectedHeight };
+    return {x: projectedDistanceRightViewToPlayer , y: projectedDistanceBottomViewToPlayer , height: projectedHeight };
 
 }
 
