@@ -1,17 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { HelperClass } from './helperClass';
 
-interface Pole {
-  height: number,
-  YBelowHorizon: number,
-  x: number
-}
 
-interface OriginalPole {
-  floorLocationX: number,
-  floorLocationY: number,
-  height: number
-}
 
 @Component({
   selector: 'app-root',
@@ -57,7 +47,7 @@ export class AppComponent implements AfterViewInit {
       , this.playerPositionY);
       return {
         height: OriginalPole.height * (200 / lengthFromPosition)
-      , YBelowHorizon: 5000 / lengthFromPosition
+      , y: 5000 / lengthFromPosition
       , x: this.middleWidth - OriginalPole.floorLocationX * (200 / lengthFromPosition)};
   }
 
@@ -90,10 +80,10 @@ export class AppComponent implements AfterViewInit {
     ctx!.strokeStyle = 'black';
     ctx!.fillStyle = 'white';
     ctx!.beginPath();
-    ctx!.moveTo(leftPole.x, this.horizonHeight - leftPole.YBelowHorizon + leftPole.height);
-    ctx!.lineTo(leftPole.x, this.horizonHeight -leftPole.YBelowHorizon);
-    ctx!.lineTo(rightPole.x, this.horizonHeight - rightPole.YBelowHorizon);
-    ctx!.lineTo(rightPole.x, this.horizonHeight - rightPole.YBelowHorizon + rightPole.height);
+    ctx!.moveTo(leftPole.x, this.horizonHeight - leftPole.y + leftPole.height);
+    ctx!.lineTo(leftPole.x, this.horizonHeight -leftPole.y);
+    ctx!.lineTo(rightPole.x, this.horizonHeight - rightPole.y);
+    ctx!.lineTo(rightPole.x, this.horizonHeight - rightPole.y + rightPole.height);
     ctx!.closePath();
     ctx!.stroke();
     ctx!.fill();
